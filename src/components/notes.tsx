@@ -4,6 +4,7 @@
   interface NotesProps{
       notes:Note[];
       setNotes:React.Dispatch<React.SetStateAction<Note[]>>;
+      deleteRef:React.RefObject<HTMLDivElement>;
   }
   interface Note{
       id:string;
@@ -17,7 +18,7 @@
       y:number;
   }
 
-  const Notes:React.FC<NotesProps> = ({notes,setNotes}) => {
+  const Notes:React.FC<NotesProps> = ({notes,setNotes,deleteRef}) => {
 
     const generatPosition=():postionInterface=>{
       const maxX=window.innerWidth - 210
@@ -77,6 +78,9 @@
         } else {
           updateNotePosition(id, newpos);
         }
+        if(checkForDeleteNote(final)){
+          deleteNote(id)
+        }
       }
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
@@ -87,7 +91,7 @@
       const currentRect= current?.getBoundingClientRect()
       if(!currentRect) return 
       return notes.some((n)=>{
-        if(n.id === id) return false;
+        if(n.id === id) return  false;
         const otherNotRef= notesRef.current[n.id].current
         const otherRect=otherNotRef?.getBoundingClientRect()
         if(!otherRect) return 
@@ -100,6 +104,25 @@
   
         return overlap;
       })
+    }
+    
+    const checkForDeleteNote=(noteRect:DOMRect)=>{
+      const deleteRect= deleteRef.current?.getBoundingClientRect()
+      
+      if(!deleteRect) return
+      const overlap =!(
+        noteRect.left > deleteRect.right ||
+        noteRect.right < deleteRect.left ||
+        noteRect.bottom < deleteRect.top ||
+        noteRect.top > deleteRect.bottom
+      )
+      return overlap
+    }
+
+    const deleteNote=(id:string)=>{
+      const updatedNote=notes.filter((n)=> n.id !== id)
+      setNotes(updatedNote)
+      localStorage.setItem("notes",JSON.stringify(updatedNote))
     }
 
     const updateNotePosition = (id:string, newPosition:postionInterface) => {
