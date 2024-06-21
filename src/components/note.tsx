@@ -1,19 +1,35 @@
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { BsThreeDots } from "react-icons/bs";
 
 interface NoteInterface {
   initalPosition: { x: number, y: number }
   content: string,
   date: Date,
+  editNote:()=>void
 }
 
-const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, content, date, ...props }, ref) => {
+const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, content, date,editNote, ...props }, ref) => {
   const finalDate = new Date(date)
   const [dropdown, setDropdown] = useState(false)
+  const dropdownRef= useRef<HTMLDivElement>(null)
 
   const toggleDropdown = () => {
     setDropdown(prev => !prev);
   };
+
+  const handleOutsideClick=(e:MouseEvent)=>{
+    if(dropdownRef.current && !dropdownRef.current.contains(e.target as Node)){
+      setDropdown(false)
+    }
+  }
+
+  useEffect(()=>{
+    document.addEventListener("mousedown",handleOutsideClick);
+    return ()=>{
+      document.removeEventListener("mousedown",handleOutsideClick);
+    }
+  },[])
+
   return (
     <>
       <div
@@ -27,7 +43,7 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
       >
         {content}
         <div className='flex justify-between items-center pt-2 select-none'>
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             
             <button
               id="dropdownMenuIconHorizontalButton"
@@ -46,7 +62,7 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
               >
                 <ul className="py-2 text-sm text-gray-700" aria-labelledby="dropdownMenuIconHorizontalButton">
                   <li>
-                    <span className="block px-4 py-2 hover:bg-gray-100">Edit Note</span>
+                    <span className="block px-4 py-2 hover:bg-gray-100" onClick={editNote}>Edit Note</span>
                   </li>
                   <li>
                     <span className="block px-4 py-2 hover:bg-gray-100">Change Color</span>

@@ -10,4 +10,7 @@ How to setup Sticky Notes??
 
 `npm run dev`
 
-![Screenshot](./public/image.png)
+<!-- ![Screenshot](./public/image.png) -->
+![Screenshot-1](./public/v2-1.png)
+![Screenshot-2](./public/v2-2.png)
+![Screenshot-3](./public/v2-3.png)

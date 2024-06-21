@@ -5,6 +5,7 @@
       notes:Note[];
       setNotes:React.Dispatch<React.SetStateAction<Note[]>>;
       deleteRef:React.RefObject<HTMLDivElement>;
+      setUpdate:React.Dispatch<React.SetStateAction<Note | null>>;
   }
   interface Note{
       id:string;
@@ -18,7 +19,7 @@
       y:number;
   }
 
-  const Notes:React.FC<NotesProps> = ({notes,setNotes,deleteRef}) => {
+  const Notes:React.FC<NotesProps> = ({notes,setNotes,deleteRef,setUpdate}) => {
 
     const generatPosition=():postionInterface=>{
       const maxX=window.innerWidth - 210
@@ -41,7 +42,7 @@
         }
       })
       setNotes(updatedNotes)
-      localStorage.setItem("notes",JSON.stringify(updatedNotes))
+      window.localStorage.setItem("notes",JSON.stringify(updatedNotes))
     },[notes.length])
 
     const notesRef=useRef<{[key:string]:React.RefObject<HTMLDivElement>}>({})
@@ -132,6 +133,7 @@
       setNotes(updatedNotes);
       localStorage.setItem("notes", JSON.stringify(updatedNotes));
     };
+
     return (
       <div>
           {notes?.map(n=>(
@@ -141,7 +143,12 @@
               initalPosition={n.position}
               content={n.content}
               date={n.date}
-              onMouseDown={(e:React.MouseEvent)=>handleDrag(n,e)} />
+              editNote={()=>{
+                console.log("Activated update")
+                setUpdate({...n})
+              }}
+              onMouseDown={(e:React.MouseEvent)=>handleDrag(n,e)} 
+            />
           ))}
       </div>
     )
