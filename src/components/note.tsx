@@ -18,7 +18,7 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
     <>
       <div
         ref={ref}
-        className={`absolute border-2 border-black rounded-md py-3 px-3 min-w-48 max-w-72 break-words text-wrap min-h-10 h-auto cursor-move bg-purple-200 flex flex-col text-medium text-lg`}
+        className={`absolute border-2 border-black rounded-md py-3 px-3 min-w-48 max-w-72 break-words text-wrap min-h-10 h-auto cursor-move bg-purple-200 dark:bg-[#E5B8F4] flex flex-col text-medium text-lg`}
         style={{
           left: `${initalPosition?.x}px`,
           top: `${initalPosition?.y}px`,

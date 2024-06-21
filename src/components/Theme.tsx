@@ -8,11 +8,7 @@ interface ThemeToggleButtonProps {
 
 const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({ darkTheme, setThemeDark }) => {
   const defaultTheme = useRef(window.matchMedia((`prefers-color-scheme:dark`)).matches);
-  useEffect(()=>{
-    console.log("mode",window.localStorage.getItem("mode")==='dark'?true:false)
-    setThemeDark(window.localStorage.getItem("mode")?((window.localStorage.getItem("mode"))!=='dark'?true:false) : defaultTheme.current)
-  },[setThemeDark])
-  console.log(darkTheme)
+
   return (
     <div className="flex items-center w-32 justify-center">
       <input
@@ -29,8 +25,8 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({ darkTheme, setThe
         className="bg-gray-800 w-12 h-6 rounded-full flex items-center p-1 cursor-pointer relative"
       >
         <div className="flex justify-between w-full">
-          <FaMoon className="text-yellow-400" />
           <FaSun className="text-yellow-500" />
+          <FaMoon className="text-yellow-400" />
         </div>
         <div
           className={`absolute bg-white w-5 h-5 rounded-full transform transition-transform duration-200 ${darkTheme ? 'translate-x-6' : ''}`}
