@@ -5,14 +5,16 @@ interface NoteInterface {
   initalPosition: { x: number, y: number }
   content: string,
   date: Date,
-  editNote:()=>void
+  editNote?:()=>void
+  editColor?:()=>void,
+  color?:{light:string,dark:string}
 }
 
-const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, content, date,editNote, ...props }, ref) => {
+const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, content, date,color,editNote,editColor, ...props }, ref) => {
   const finalDate = new Date(date)
   const [dropdown, setDropdown] = useState(false)
   const dropdownRef= useRef<HTMLDivElement>(null)
-
+  const mode= window.localStorage.getItem("mode")?((window.localStorage.getItem("mode"))==='dark') : window.matchMedia((`prefers-color-scheme:dark`)).matches
   const toggleDropdown = () => {
     setDropdown(prev => !prev);
   };
@@ -29,15 +31,15 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
       document.removeEventListener("mousedown",handleOutsideClick);
     }
   },[])
-
   return (
     <>
       <div
         ref={ref}
-        className={`absolute border-2 border-black rounded-md py-3 px-3 min-w-48 max-w-72 break-words text-wrap min-h-10 h-auto cursor-move bg-purple-200 dark:bg-[#E5B8F4] flex flex-col text-medium text-lg`}
+        className={`absolute border-2 border-black rounded-md py-3 px-3 min-w-48 max-w-72 break-words text-wrap min-h-10 h-auto cursor-move flex flex-col text-medium text-lg`}
         style={{
           left: `${initalPosition?.x}px`,
           top: `${initalPosition?.y}px`,
+          backgroundColor:!mode? (color?.light || "#E5B8F4") :(color?.dark || "#E5B8F4")
         }}
         {...props}
       >
@@ -48,8 +50,11 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
             <button
               id="dropdownMenuIconHorizontalButton"
               data-dropdown-toggle="dropdownDotsHorizontal"
-              className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-purple-200 rounded-lg hover:bg-purple-300 focus:ring-2 focus:outline-none focus:ring-purple-50"
+              className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 rounded-lg focus:ring-2 focus:outline-none focus:ring-purple-50"
               type="button"
+              style={{
+                backgroundColor:color?.light
+              }}
               onClick={toggleDropdown}
             >
               <BsThreeDots />
@@ -65,7 +70,7 @@ const Note = forwardRef<HTMLDivElement, NoteInterface>(({ initalPosition, conten
                     <span className="block px-4 py-2 hover:bg-gray-100" onClick={editNote}>Edit Note</span>
                   </li>
                   <li>
-                    <span className="block px-4 py-2 hover:bg-gray-100">Change Color</span>
+                    <span className="block px-4 py-2 hover:bg-gray-100" onClick={editColor}>Change Color</span>
                   </li>
                   
                 </ul>

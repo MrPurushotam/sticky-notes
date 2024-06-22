@@ -6,12 +6,15 @@
       setNotes:React.Dispatch<React.SetStateAction<Note[]>>;
       deleteRef:React.RefObject<HTMLDivElement>;
       setUpdate:React.Dispatch<React.SetStateAction<Note | null>>;
+      setEditColorNote:React.Dispatch<React.SetStateAction<Note | null>>;
+      setEditColor:React.Dispatch<React.SetStateAction<boolean>>;
   }
   interface Note{
       id:string;
       content:string;
       date:Date;
       position:postionInterface;
+      color?:{light:string,dark:string};
   }
 
   interface postionInterface{
@@ -19,7 +22,7 @@
       y:number;
   }
 
-  const Notes:React.FC<NotesProps> = ({notes,setNotes,deleteRef,setUpdate}) => {
+  const Notes:React.FC<NotesProps> = ({notes,setNotes,deleteRef,setUpdate,setEditColor,setEditColorNote}) => {
 
     const generatPosition=():postionInterface=>{
       const maxX=window.innerWidth - 210
@@ -143,9 +146,13 @@
               initalPosition={n.position}
               content={n.content}
               date={n.date}
+              color={n.color}
               editNote={()=>{
-                console.log("Activated update")
                 setUpdate({...n})
+              }}
+              editColor={()=>{
+                setEditColor(true)
+                setEditColorNote({...n})
               }}
               onMouseDown={(e:React.MouseEvent)=>handleDrag(n,e)} 
             />

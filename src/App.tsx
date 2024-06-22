@@ -3,11 +3,14 @@ import './App.css'
 import Notes from './components/notes'
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Theme from './components/Theme';
+import ColorSetting from "./components/ColorSetting"
 
 interface Note {
-  id: string,
-  content: string,
-  date: Date
+  id: string;
+  content: string;
+  date: Date;
+  position?:{x:number,y:number}
+  color?:{light:string,dark:string};
 }
 function App() {
   const [notes, setNotes] = useState<Note[]>(window.localStorage.getItem("notes") ? JSON.parse(window.localStorage.getItem("notes")!) : [])
@@ -15,7 +18,10 @@ function App() {
   const [clicked, setClicked] = useState<boolean>(false)
   const [update,setUpdate]=useState<Note|null>(null)
   const [darkTheme , setDarkTheme]=useState(window.localStorage.getItem("mode")?((window.localStorage.getItem("mode"))==='dark') : window.matchMedia((`prefers-color-scheme:dark`)).matches)
+  const [editColor,setEditColor]=useState<boolean>(false)
+  const [editColorNote,setEditColorNote]=useState<Note | null>(null)
   const deleteRef = useRef<HTMLDivElement>()
+  const editColorRef = useRef<HTMLDivElement>()
   const idCounter = useRef(window.localStorage.getItem("counter") ? JSON.parse(window.localStorage.getItem("counter")!) : "2024000")
 
   useEffect(() => {
@@ -35,7 +41,7 @@ function App() {
     if (!current.trim()) {
       alert("Note can't be empty.")
     } else {
-      setNotes(prev => [...prev, { content: current.trim(), date: new Date(), id: String(idCounter.current++) }])
+      setNotes(prev => [...prev, { content: current.trim(), date: new Date(), id: String(idCounter.current++) ,color:{dark:"#E5B8F4",light:"#E9D5FF"} }])
       setCurrent("")
     }
     setClicked(false)
@@ -53,6 +59,34 @@ function App() {
     setCurrent("")
     setClicked(false)
   }
+
+  const EditColorFunction=(color:{light:string,dark:string})=>{
+    if(!editColorNote){
+      return alert("Something went wrong.")
+    }
+    setNotes(prev=>
+      prev.map(n=>
+        n.id ===editColorNote.id ?{...n,color}:n
+      )
+    )
+    setEditColorNote(null)
+    setEditColor(false)
+  }
+
+  const handleOutsideEditColorBoxClick=(e:MouseEvent)=>{
+    if(editColorRef.current && !editColorRef.current.contains(e.target as Node)){
+      setEditColor(false)
+      setEditColorNote(null)
+    }
+  }
+
+  useEffect(()=>{
+    document.addEventListener("mousedown",handleOutsideEditColorBoxClick);
+    return ()=>{
+      document.removeEventListener("mousedown",handleOutsideEditColorBoxClick);
+    }
+  },[])
+
 
   return (
     <div className=' bg-white dark:bg-[#3F4E4F] w-[100vw] h-[100vh]'>
@@ -73,7 +107,9 @@ function App() {
         </div>
         <Theme darkTheme={darkTheme} setThemeDark={setDarkTheme} />
       </div>
-      <Notes notes={notes} setNotes={setNotes} deleteRef={deleteRef} setUpdate={setUpdate} />
+      <Notes notes={notes} setNotes={setNotes} deleteRef={deleteRef} setUpdate={setUpdate} setEditColorNote={setEditColorNote} setEditColor={setEditColor} />
+
+      {editColor && editColorNote && <ColorSetting EditColorFunction={EditColorFunction} note={editColorNote} editColorRef={editColorRef} />}
     </div>
   )
 }

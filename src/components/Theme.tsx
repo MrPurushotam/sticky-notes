@@ -17,7 +17,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({ darkTheme, setThe
         className="hidden"
         checked={darkTheme}
         onChange={() => {
-          window.localStorage.setItem("mode",!darkTheme?"light":"dark")
+          window.localStorage.setItem("mode",darkTheme?"light":"dark")
           setThemeDark(!darkTheme)}}
       />
       <label
