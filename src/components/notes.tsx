@@ -46,7 +46,7 @@
       })
       setNotes(updatedNotes)
       window.localStorage.setItem("notes",JSON.stringify(updatedNotes))
-    },[notes.length])
+    },[notes])
 
     const notesRef=useRef<{[key:string]:React.RefObject<HTMLDivElement>}>({})
 
@@ -151,8 +151,8 @@
                 setUpdate({...n})
               }}
               editColor={()=>{
-                setEditColor(true)
                 setEditColorNote({...n})
+                setEditColor(true)
               }}
               onMouseDown={(e:React.MouseEvent)=>handleDrag(n,e)} 
             />

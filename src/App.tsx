@@ -89,12 +89,14 @@ function App() {
 
 
   return (
-    <div className=' bg-white dark:bg-[#3F4E4F] w-[100vw] h-[100vh]'>
+    <div className=' bg-white dark:bg-[#070707] w-[100vw] h-[100vh]'>
       <div className='text-xl text-gray-400 font-light absolute top-[50vh] left-[40vw] shadow-sm text-semibold dark:text-gray-200 select-none'>Create your notes & Place it accordingly</div>
       <div className='flex justify-between'>
         <span></span>
-        <div ref={deleteRef} className='flex w-1/2 border-2 p-2 space-x-4 mx-auto my-7 items-center'>
-          <RiDeleteBin6Line className='text-[4vh] hover:shadow-xl hover:shadow-red-500 rounded-lg dark:text-white' />
+        <div className='flex w-1/2 border-2 border-black dark:border-slate-200 p-2 space-x-4 mx-auto my-7 items-center'>
+          <div ref={deleteRef}>
+          <RiDeleteBin6Line className='text-[4vh] bg-transparent text-red-500 font-semibold hover:shadow-md hover:shadow-red-500 hover:text-red-600' />
+          </div>
           <input type="text" placeholder='Enter your note here'
             className='p-2 border-2 border-gray-400 rounded-sm text-lg shadow-md w-full dark:bg-[#F4EEE0]'
             onChange={(e) => setCurrent(e.target.value)}

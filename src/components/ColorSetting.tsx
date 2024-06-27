@@ -23,7 +23,7 @@ interface ColorSettingProps{
   EditColorFunction: (color:{light:string,dark:string})=>void;
   editColorRef:React.RefObject<HTMLDivElement>;
 }
-const colorList:ColorList[]=[{dark:"#E5B8F4",light:"#E9D5FF"},{dark:"yellow",light:"yellow"},{dark:"red",light:"red"},{dark:"green",light:"green"}];
+const colorList:ColorList[]=[{dark:"#E5B8F4",light:"#E9D5FF"},{light:"#8ecae6",dark:"#219ebc"},{light:"#ccd5ae",dark:"#e9edc9"},{light:"#f4a261",dark:"#fec89a"},{light:"#95d5b2",dark:"#52b788"},{light:"#fca311",dark:"#ffb703"}];
 
 
 
@@ -42,7 +42,7 @@ const ColorSetting:React.FC<ColorSettingProps>= ({EditColorFunction,note,editCol
       <div className="text-center">
         Choose  your note color for
         <br/>
-        <div className='text-left p-2 border-2 border-black rounded-md w-9/12 bg-purple-200 mx-auto my-2'>
+        <div className={`text-left p-2 border-2 border-black rounded-md w-9/12 mx-auto my-2`} style={{backgroundColor:(mode ? note?.color.dark:note?.color.light)}}>
           {note?.content}
         </div>
       </div>
